@@ -16,11 +16,6 @@ I have developed a deep learning solution using Long Short-Term Memory (LSTM) ne
 2. Anticipate deviations from the optimal "golden profile" of CPPs and make real-time corrective recommendations.
 3. Optimize the blending, compression, and coating stages based on real-time sensor data.
 
-### Key Features of the Solution:
-- **LSTM Networks:** These networks are well-suited for time-series forecasting and help predict future values of process parameters based on historical data.
-- **Real-time Monitoring:** By using sensor data collected from various stages of the production process (e.g., Loss-In-Weight feeders, blenders, and tablet press), the model ensures continuous monitoring.
-- **Preventive Actions:** The model helps identify process disturbances early and takes preventive actions to maintain product quality.
-
 ## Dataset
 
 The dataset used in this project is provided as part of the [2024 MSOM Data Challenge](https://doi.org/10.1287/msom.2024.0860) and includes the following data files:
