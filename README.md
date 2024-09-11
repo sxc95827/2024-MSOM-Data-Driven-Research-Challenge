@@ -2,11 +2,11 @@
 
 ## Overview
 
-This project is part of my submission to the 2024 MSOM Data-Driven Research Challenge. The challenge provides a pharmaceutical manufacturing dataset that includes continuous manufacturing data for tablet production, with approximately 300 million data points collected over 120 hours. The goal is to optimize processes like blending, compression, and coating operations in real-time using advanced machine learning techniques.
+This project is a demo used for the 2024 MSOM Data-Driven Research Challenge. The challenge provides a pharmaceutical manufacturing dataset that includes continuous manufacturing data for tablet production, with approximately 300 million data points collected over 120 hours. The goal is to optimize processes like blending, compression, and coating operations in real-time using advanced machine learning techniques.
 
 ## Problem Statement
 
-The dataset presents a series of challenges related to maintaining a "state of control" over pharmaceutical production, particularly during continuous manufacturing. Variability in input materials and process parameters can significantly impact product quality. My primary challenge is to predict and control these parameters using time-series data from the manufacturing process to minimize production failures and maintain high product quality.
+The dataset presents a series of challenges related to maintaining a "state of control" over pharmaceutical production, particularly during continuous manufacturing. Variability in input materials and process parameters can significantly impact product quality. The primary challenge is to predict and control these parameters using time-series data from the manufacturing process to minimize production failures and maintain high product quality.
 
 ## Approach
 
