@@ -64,6 +64,8 @@ parser.add_argument('--rge-optimizer', type=str, choices=['sgd', 'sign'],default
 parser.add_argument('--rge-block', type=int, choices=[0,1,2,3],default=0,
                     help = 'we can choose which block to adopt rge')
 parser.add_argument('--seed', type=int, default=324823217)
+parser.add_argument('--disable-rge', action='store_true', default=False,
+                    help='disable RGE algorithm and use only backpropagation for all blocks')
 
 def set_seed(seed):
     """
@@ -144,7 +146,7 @@ def rge_step_block0(
             param_backup[name] = p.data.clone()
 
     # 2) 给 指定 block 的参数做随机扰动，并计算差分
-    grads = {}  # 用来存储 block 的“零阶梯度”
+    grads = {}  # 用来存储 block 的"零阶梯度"
     perturb_dict = {}
     block_num = args.rge_block
     for param_name, param in blockwise_dict[block_num]:
@@ -279,22 +281,24 @@ def main():
             for i, loss in enumerate(loss_list):
                 scaler.scale(loss).backward()
 
-            rge_step_block0(
-                model=model,
-                base_loss=loss_list[args.rge_block],    # 直接复用这次 forward 的 loss
-                y1=y1, y2=y2,
-                step_size=args.rge_step_size,   # 零阶步长
-                args=args,
-            )
+            # 只有在RGE未禁用时才执行RGE相关代码
+            if not args.disable_rge:
+                rge_step_block0(
+                    model=model,
+                    base_loss=loss_list[args.rge_block],    # 直接复用这次 forward 的 loss
+                    y1=y1, y2=y2,
+                    step_size=args.rge_step_size,   # 零阶步长
+                    args=args,
+                )
 
-            # 用零阶计算的梯度覆盖一阶得到的梯度
-            for name, p in model.named_parameters():
-                # 这里实现了零阶的sgd 和 sign
-                if hasattr(p, 'gradient') and p.requires_grad:
-                    if args.rge_optimizer == 'sgd':
-                        p.data.sub_(args.rge_lr * p.gradient)
-                    elif args.rge_optimizer == 'sign':
-                        p.data.sub_(args.rge_lr * p.gradient.sign())
+                # 用零阶计算的梯度覆盖一阶得到的梯度
+                for name, p in model.named_parameters():
+                    # 这里实现了零阶的sgd 和 sign
+                    if hasattr(p, 'gradient') and p.requires_grad:
+                        if args.rge_optimizer == 'sgd':
+                            p.data.sub_(args.rge_lr * p.gradient)
+                        elif args.rge_optimizer == 'sign':
+                            p.data.sub_(args.rge_lr * p.gradient.sign())
 
             scaler.step(optimizer)
             scaler.update()
@@ -517,7 +521,6 @@ class Transform:
         y1 = self.transform(x)
         y2 = self.transform_prime(x)
         return y1, y2
-
-
+    
 if __name__ == '__main__':
     main()
